@@ -53,7 +53,7 @@ def show_random_elements(dataset, num_examples=10):
     for column, typ in dataset.features.items():
         if isinstance(typ, datasets.ClassLabel):
             df[column] = df[column].transform(lambda i: typ.names[i])
-    display(HTML(df.to_html()))
+    # display(HTML(df.to_html()))
 
 # Function to tokenize using HF's tokenizer
 def preprocess_function(examples):
