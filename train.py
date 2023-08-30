@@ -24,6 +24,7 @@ import evaluate
 from IPython.display import display, HTML
 import numpy as np
 import pandas as pd
+import torch
 import transformers
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, TrainingArguments, Trainer
 
@@ -90,6 +91,8 @@ dataset = DatasetDict({
     'validation': train_plus_validation['test'],
     'test': dataset["test"],
 })
+format = {'type': 'torch', 'format_kwargs' :{'dtype': torch.float}}
+dataset.set_format(**format)
 
 # Set evaluation metrics from HF evaluate to "accuracy"
 accuracy_metric = evaluate.load("accuracy")
