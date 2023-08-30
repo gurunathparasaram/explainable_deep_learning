@@ -33,6 +33,10 @@ args = parser.parse_args()
 
 # Set logging config
 logging.basicConfig(filename='train.log', filemode='w', level=logging.INFO, format='%(process)d-%(levelname)s-%(message)s')
+logger = logging.getLogger()
+ 
+# Setting the threshold of logger to DEBUG
+logger.setLevel(logging.INFO)
 
 #######################################
 #             Helper functions        #
