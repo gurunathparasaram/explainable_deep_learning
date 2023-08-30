@@ -61,7 +61,7 @@ def show_random_elements(dataset, num_examples=10):
 
 # Function to tokenize using HF's tokenizer
 def preprocess_function(examples):
-    return tokenizer(examples["text"], truncation=True)
+    return tokenizer(examples["text"], padding=True, return_tensors="pt", truncation=True)
 
 # Function to evaluate accuracy
 def compute_metrics(eval_pred):
