@@ -91,9 +91,10 @@ dataset = DatasetDict({
     'validation': train_plus_validation['test'],
     'test': dataset["test"],
 })
-format = {'type': 'torch', 'format_kwargs' :{'dtype': torch.float}}
-dataset.set_format(**format)
+# format = {'type': 'torch', 'format_kwargs' :{'dtype': torch.float}}
+# dataset.set_format(**format)
 
+dataset.set_format(type='torch', columns=['label'], format_kwargs={"dtype":torch.float64})
 # Set evaluation metrics from HF evaluate to "accuracy"
 accuracy_metric = evaluate.load("accuracy")
 
