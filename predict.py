@@ -124,9 +124,9 @@ task="imdb_classification"
 batch_size = 2
 validation_key = "validation"
 
-output_dir_path = os.path.join(args.output_dir, f"{model_name}-finetuned-{task}")
+output_dir_path = os.path.join(args.output_dir, f"{model_name}-finetuned-{task}/checkpoint-1667")
 
-model = AutoModelForSequenceClassification.from_pretrained(model_checkpoint, num_labels=num_labels)
+model = AutoModelForSequenceClassification.from_pretrained(output_dir_path, num_labels=num_labels)
 
 args = TrainingArguments(
     output_dir_path,
@@ -175,9 +175,7 @@ with open(f"{output_dir_path}/test_outputs.json", "w") as op_file:
         outputs.append(
             output
         )
-        json.dump(outputs, op_file)
+    json.dump(outputs, op_file)
 
-with jsonlines.open(f"{output_dir_path}/outputs.jsonl", mode='w') as writer:
-    for sample in outputs:
-        writer.write(sample)        
+       
 
