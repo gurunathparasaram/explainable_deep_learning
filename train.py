@@ -79,7 +79,7 @@ def compute_metrics(eval_pred):
 
 # Get IMDB dataset from HF
 logger.info(f"Loading IMDB dataset")
-dataset = load_dataset("imdb")
+dataset = load_dataset("imdb", split="train[:20%]")
 
 # REFERENCE: https://discuss.huggingface.co/t/how-to-split-main-dataset-into-train-dev-test-as-datasetdict/1090/13
 
@@ -148,8 +148,8 @@ logger.info(f"Training args:{args}")
 trainer = Trainer(
     model,
     args,
-    train_dataset=encoded_dataset["train"][:200],
-    eval_dataset=encoded_dataset[validation_key][:50],
+    train_dataset=encoded_dataset["train"],
+    eval_dataset=encoded_dataset[validation_key],
     tokenizer=tokenizer,
     compute_metrics=compute_metrics
 )
@@ -159,7 +159,7 @@ logger.info(f"Starting training")
 trainer.train()
 
 # Evaluate the trainer model  
-predictions, labels, final_metrics = trainer.predict(encoded_dataset["test"][:100])
+predictions, labels, final_metrics = trainer.predict(encoded_dataset["test"])
 print(f"Final Test metrics:{final_metrics}")
 outputs = []
 
