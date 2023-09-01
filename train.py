@@ -12,6 +12,7 @@ and also other Huggingface resources.
 
 # Standard library imports
 import argparse
+import jsonlines
 import logging
 import os
 import random
@@ -25,6 +26,7 @@ from IPython.display import display, HTML
 import numpy as np
 import pandas as pd
 import torch
+from torch import nn
 import transformers
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, TrainingArguments, Trainer
 
@@ -139,9 +141,21 @@ args = TrainingArguments(
     push_to_hub=False,
 )
 
+
+
+class ClassificationTrainer(Trainer):
+    def compute_loss(self, model, inputs, return_outputs=False):
+        labels = inputs.get("labels")
+        outputs = model(**inputs)
+        logits = outputs.get('logits')
+        loss_fct = nn.CrossEntropyLoss()
+        loss = loss_fct(logits.view(-1, model.config.num_labels), labels.view(-1))
+        return (loss, outputs) if return_outputs else loss
+
+
 logger.info(f"Training args:{args}")
 # Piggyback on HF's Trainer code
-trainer = Trainer(
+trainer = ClassificationTrainer(
     model,
     args,
     train_dataset=encoded_dataset["train"],
@@ -155,6 +169,20 @@ logger.info(f"Starting training")
 trainer.train()
 
 # Evaluate the trainer model  
-trainer.evaluate()
+predictions, labels, final_metrics = trainer.predict(encoded_dataset["test"])
+print(f"Final Test metrics:{final_metrics}")
+outputs = []
 
+
+with open(f"{output_dir_path}/test_outputs.json", "w") as op_file:
+    for data_idx, data_sample in enumerate(dataset["test"]):
+        outputs.append(
+            "review": data_sample["text"],
+            "label": labels[data_idx],
+            "predicted": prediction[data_idx],
+        )
+
+with jsonlines.open(f"{output_dir_path}/outputs.jsonl"}, mode='w') as writer:
+    for sample in outputs:
+        writer.write(sample)        
 
