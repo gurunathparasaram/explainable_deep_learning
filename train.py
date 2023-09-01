@@ -143,19 +143,9 @@ args = TrainingArguments(
 
 
 
-class ClassificationTrainer(Trainer):
-    def compute_loss(self, model, inputs, return_outputs=False):
-        labels = inputs.get("labels")
-        outputs = model(**inputs)
-        logits = outputs.get('logits')
-        loss_fct = nn.CrossEntropyLoss()
-        loss = loss_fct(logits.view(-1, model.config.num_labels), labels.view(-1))
-        return (loss, outputs) if return_outputs else loss
-
-
 logger.info(f"Training args:{args}")
 # Piggyback on HF's Trainer code
-trainer = ClassificationTrainer(
+trainer = Trainer(
     model,
     args,
     train_dataset=encoded_dataset["train"],
