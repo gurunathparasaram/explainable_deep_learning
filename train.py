@@ -164,6 +164,7 @@ predictions, labels, final_metrics = trainer.predict(encoded_dataset["test"])
 print(f"Final Test metrics:{final_metrics}")
 outputs = []
 
+predictions = np.argmax(predictions, axis=1)
 
 with open(f"{output_dir_path}/test_outputs.json", "w") as op_file:
     for data_idx, data_sample in enumerate(dataset["test"]):
@@ -175,7 +176,10 @@ with open(f"{output_dir_path}/test_outputs.json", "w") as op_file:
         outputs.append(
             output
         )
-        json.dump(outputs, op_file)
+        print(f"output:{output}")
+        print(f"op_label:{output["label"]}")
+        print(f"op_predicted:{output["predicted"]}")
+    json.dump(outputs, op_file)
 
 with jsonlines.open(f"{output_dir_path}/outputs.jsonl", mode='w') as writer:
     for sample in outputs:
