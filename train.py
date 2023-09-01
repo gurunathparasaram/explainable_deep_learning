@@ -79,7 +79,7 @@ def compute_metrics(eval_pred):
 
 # Get IMDB dataset from HF
 logger.info(f"Loading IMDB dataset")
-dataset = load_dataset("imdb", split="train[:20%]")
+dataset = load_dataset("imdb", split="train[:20%]+test[:10%]")
 
 # REFERENCE: https://discuss.huggingface.co/t/how-to-split-main-dataset-into-train-dev-test-as-datasetdict/1090/13
 
