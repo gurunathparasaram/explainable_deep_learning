@@ -148,8 +148,8 @@ logger.info(f"Training args:{args}")
 trainer = Trainer(
     model,
     args,
-    train_dataset=encoded_dataset["train"],
-    eval_dataset=encoded_dataset[validation_key],
+    train_dataset=encoded_dataset["train"][:200],
+    eval_dataset=encoded_dataset[validation_key][:50],
     tokenizer=tokenizer,
     compute_metrics=compute_metrics
 )
@@ -159,19 +159,20 @@ logger.info(f"Starting training")
 trainer.train()
 
 # Evaluate the trainer model  
-predictions, labels, final_metrics = trainer.predict(encoded_dataset["test"])
+predictions, labels, final_metrics = trainer.predict(encoded_dataset["test"][:100])
 print(f"Final Test metrics:{final_metrics}")
 outputs = []
 
 
 with open(f"{output_dir_path}/test_outputs.json", "w") as op_file:
     for data_idx, data_sample in enumerate(dataset["test"]):
-        outputs.append(
-            {
+        output = {
                 "review": data_sample["text"],
                 "label": labels[data_idx],
                 "predicted": predictions[data_idx],
             }
+        outputs.append(
+            output
         )
 
 with jsonlines.open(f"{output_dir_path}/outputs.jsonl", mode='w') as writer:
