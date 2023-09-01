@@ -3,7 +3,7 @@
 #SBATCH --partition soc-gpu-np
 #SBATCH --ntasks-per-node=32
 #SBATCH --nodes=1
-#SBATCH --gres=gpu:a100:1 
+#SBATCH --gres=gpu:a100:3
 #SBATCH --time=8:00:00
 #SBATCH --mem=40GB
 #SBATCH --mail-user=guru@cs.utah.edu

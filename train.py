@@ -33,6 +33,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trai
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--output_dir', type=str, help='Directory where model checkpoints will be saved')
+parser.add_argument("--batch", type=int, help="Batch size")
 args = parser.parse_args()
 
 # Set logging config
@@ -97,7 +98,7 @@ dataset = DatasetDict({
 # format = {'type': 'torch', 'format_kwargs' :{'dtype': torch.float}}
 # dataset.set_format(**format)
 
-dataset.set_format(type='torch', columns=['label'], format_kwargs={"dtype":torch.float64})
+# dataset.set_format(output_all_columns=True, type='numpy', columns=['label'], format_kwargs={"dtype":int})
 # Set evaluation metrics from HF evaluate to "accuracy"
 accuracy_metric = evaluate.load("accuracy")
 
@@ -113,15 +114,15 @@ tokenizer = AutoTokenizer.from_pretrained(model_checkpoint, use_fast=True)
 # Convert tokens to token_ids
 logger.info(f"Tokenizing data . . . . ")
 encoded_dataset = dataset.map(preprocess_function, batched=True, load_from_cache_file=False)
-
+encoded_dataset.set_format(output_all_columns=True, type='numpy', columns=['label'], format_kwargs={"dtype":float})
 # Specify sequence classification model and its config
-num_labels = 1
+num_labels = 2
 
 # Specify trainer + args + hyper-params
 metric_name = "accuracy"
 model_name = model_checkpoint.split("/")[-1]
 task="imdb_classification"
-batch_size = 2
+batch_size = 4
 validation_key = "validation"
 
 output_dir_path = os.path.join(args.output_dir, f"{model_name}-finetuned-{task}")
@@ -170,18 +171,14 @@ with open(f"{output_dir_path}/test_outputs.json", "w") as op_file:
     for data_idx, data_sample in enumerate(dataset["test"]):
         output = {
                 "review": data_sample["text"],
-                "label": labels[data_idx],
-                "predicted": predictions[data_idx],
+                "label": int(labels[data_idx]),
+                "predicted": int(predictions[data_idx]),
             }
         outputs.append(
             output
         )
         print(f"output:{output}")
-        print(f"op_label:{output["label"]}")
-        print(f"op_predicted:{output["predicted"]}")
+        print(f"op_label:{output['label']}")
+        print(f"op_predicted:{output['predicted']}")
     json.dump(outputs, op_file)
-
-with jsonlines.open(f"{output_dir_path}/outputs.jsonl", mode='w') as writer:
-    for sample in outputs:
-        writer.write(sample)        
 
