@@ -177,9 +177,11 @@ outputs = []
 with open(f"{output_dir_path}/test_outputs.json", "w") as op_file:
     for data_idx, data_sample in enumerate(dataset["test"]):
         outputs.append(
-            "review": data_sample["text"],
-            "label": labels[data_idx],
-            "predicted": prediction[data_idx],
+            {
+                "review": data_sample["text"],
+                "label": labels[data_idx],
+                "predicted": predictions[data_idx],
+            }
         )
 
 with jsonlines.open(f"{output_dir_path}/outputs.jsonl", mode='w') as writer:
