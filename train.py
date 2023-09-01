@@ -182,7 +182,7 @@ with open(f"{output_dir_path}/test_outputs.json", "w") as op_file:
             "predicted": prediction[data_idx],
         )
 
-with jsonlines.open(f"{output_dir_path}/outputs.jsonl"), mode='w') as writer:
+with jsonlines.open(f"{output_dir_path}/outputs.jsonl", mode='w') as writer:
     for sample in outputs:
         writer.write(sample)        
 
