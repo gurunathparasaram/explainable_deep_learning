@@ -20,4 +20,4 @@ export HF_DATASETS_CACHE="/scratch/general/vast/u1419540/huggingface_cache"
 
 OUT_DIR=/scratch/general/vast/u1419540/cs6966/assignment2/out
 mkdir -p ${OUT_DIR}
-python a2_prompting_idefics_llama/train.py --seed 1419540 --output_dir ${OUT_DIR} 
+python train.py --seed 1419540 --output_dir ${OUT_DIR} 
