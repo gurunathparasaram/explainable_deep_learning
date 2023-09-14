@@ -12,12 +12,12 @@
 #SBATCH --export=ALL
 
 source ~/miniconda3/etc/profile.d/conda.sh
-conda activate edl_hw2
+conda activate edl_hw1
 
 mkdir -p /scratch/general/vast/u1419540/huggingface_cache
-export TRANSFORMERS_CACHE="/scratch/general/vast/u1419540/huggingface_cache"
+export TRANSFORMER_CACHE="/scratch/general/vast/u1419540/huggingface_cache"
 export HF_DATASETS_CACHE="/scratch/general/vast/u1419540/huggingface_cache"
 
-OUT_DIR=/scratch/general/vast/u1419540/cs6966/assignment2/outputs
+OUT_DIR=/scratch/general/vast/u1419540/cs6966/assignment1/models
 mkdir -p ${OUT_DIR}
-# python train.py --output_dir ${OUT_DIR} 
+python train.py --output_dir ${OUT_DIR} 
