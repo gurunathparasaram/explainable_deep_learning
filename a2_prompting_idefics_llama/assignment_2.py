@@ -38,28 +38,33 @@ def newyorker_caption_contest_idefics(args):
     nyc_data = newyorker_caption_contest_data(args)
     nyc_data_five_val = random.sample(nyc_data['val'],5)
     nyc_data_train_two = random.sample(nyc_data['train'],2)
-
-    prompts = [
-        [
-        "User: What is in this image?",
-        "https://upload.wikimedia.org/wikipedia/commons/8/86/Id%C3%A9fix.JPG",
-        "<end_of_utterance>",
-
-        "\nAssistant: This picture depicts Idefix, the dog of Obelix in Asterix and Obelix. Idefix is running on the ground.<end_of_utterance>",
-
+    train_prompt = [
+        "User: Each example below consists of an cartoon followed by a caption. The Assistant has to explain the joke in the cartoon:",
+        "\nImage:",
+        nyc_data_train_two[0]['image'],
+        f"\nCaption:{nyc_data_train_two[0]['caption_choices']}<end_of_utterance>",
+        f"\nAssistant: {nyc_data_train_two[0]['target']}<end_of_utterance>",
         "\nUser:",
-        "https://static.wikia.nocookie.net/asterix/images/2/25/R22b.gif/revision/latest?cb=20110815073052",
-        "And who is that?<end_of_utterance>",
-
-        "\nAssistant:",
-    ],
+        "\nImage:",
+        nyc_data_train_two[1]['image'],
+        f"\nCaption:{nyc_data_train_two[1]['caption_choices']}<end_of_utterance>",
+        f"\nAssistant: {nyc_data_train_two[1]['target']}<end_of_utterance>",
     ]
+    
+    prompts = []
 
     for val_inst in nyc_data_five_val:
         # ======================> ADD YOUR CODE TO DEFINE A PROMPT WITH TWO TRAIN EXAMPLES/DEMONSTRATIONS/SHOTS <======================
-        # Each instace has a key 'image' that contains the PIL Image. You will give that to the model as input to "show" it the image instead of an url to the image jpg file.
-        
-        prompts.append(["prompt you designed"])
+        # Each instance has a key 'image' that contains the PIL Image. You will give that to the model as input to "show" it the image instead of an url to the image jpg file.
+        val_prompt = train_prompt[:]
+        val_prompt += [
+            "\nUser:",
+            "\nImage:",
+            val_inst['image'],
+            f"\nCaption:{val_inst['caption_choices']}<end_of_utterance>",
+            f"\nAssistant:",
+        ]
+        prompts.append(val_prompt)
         
         # I'm saving images to `out`` to be able to see them in the output folder
         val_inst['image'].save(f"{args.output_dir}/{val_inst['instance_id']}.jpg")
