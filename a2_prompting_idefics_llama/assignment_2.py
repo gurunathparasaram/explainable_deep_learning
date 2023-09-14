@@ -21,7 +21,7 @@ def newyorker_caption_contest_data(args):
             #'target': a human-written explanation 
             #'image': a PIL Image object
             #'caption_choices': is human-written explanation
-
+        print(f"cur_spl:{cur_spl}")
         res[spl_name] = cur_spl
     return res
 
