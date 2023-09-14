@@ -39,7 +39,21 @@ def newyorker_caption_contest_idefics(args):
     nyc_data_five_val = random.sample(nyc_data['val'],5)
     nyc_data_train_two = random.sample(nyc_data['train'],2)
 
-    prompts = []
+    prompts = [
+        [
+        "User: What is in this image?",
+        "https://upload.wikimedia.org/wikipedia/commons/8/86/Id%C3%A9fix.JPG",
+        "<end_of_utterance>",
+
+        "\nAssistant: This picture depicts Idefix, the dog of Obelix in Asterix and Obelix. Idefix is running on the ground.<end_of_utterance>",
+
+        "\nUser:",
+        "https://static.wikia.nocookie.net/asterix/images/2/25/R22b.gif/revision/latest?cb=20110815073052",
+        "And who is that?<end_of_utterance>",
+
+        "\nAssistant:",
+    ],
+    ]
 
     for val_inst in nyc_data_five_val:
         # ======================> ADD YOUR CODE TO DEFINE A PROMPT WITH TWO TRAIN EXAMPLES/DEMONSTRATIONS/SHOTS <======================
