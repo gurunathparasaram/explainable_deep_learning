@@ -62,7 +62,7 @@ def newyorker_caption_contest_idefics(args):
         prompts.append(["prompt you designed"])
         
         # I'm saving images to `out`` to be able to see them in the output folder
-        val_inst['image'].save(f"out/{val_inst['instance_id']}.jpg")
+        val_inst['image'].save(f"{args.output_dir}/out/{val_inst['instance_id']}.jpg")
 
     # --batched mode
     inputs = processor(prompts, add_end_of_utterance_token=False, return_tensors="pt").to(device)
