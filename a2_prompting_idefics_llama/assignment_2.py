@@ -86,13 +86,13 @@ def newyorker_caption_contest_idefics(args):
         nyc_data_five_val[i]['generated_idefics']=gen_expl
 
     # ======================> You will need to `mkdir out`
-    filename = '{args.output_dir}/idefics_val.jsonl'
+    filename = f'{args.output_dir}/idefics_val.jsonl'
     with jsonlines.open(filename, mode='w') as writer:
         for item in nyc_data_five_val:
             del item['image']
             writer.write(item)
 
-    filename = '{args.output_dir}/idefics_train.jsonl'
+    filename = f'{args.output_dir}/idefics_train.jsonl'
     with jsonlines.open(filename, mode='w') as writer:
         for item in nyc_data_train_two:
             del item['image']
