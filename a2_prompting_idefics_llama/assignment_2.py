@@ -86,13 +86,13 @@ def newyorker_caption_contest_idefics(args):
         nyc_data_five_val[i]['generated_idefics']=gen_expl
 
     # ======================> You will need to `mkdir out`
-    filename = f'{args.output_dir}/idefics_val.jsonl'
+    filename = f'{args.output_dir}/val.jsonl'
     with jsonlines.open(filename, mode='w') as writer:
         for item in nyc_data_five_val:
             del item['image']
             writer.write(item)
 
-    filename = f'{args.output_dir}/idefics_train.jsonl'
+    filename = f'{args.output_dir}/train.jsonl'
     with jsonlines.open(filename, mode='w') as writer:
         for item in nyc_data_train_two:
             del item['image']
@@ -102,12 +102,12 @@ def newyorker_caption_contest_idefics(args):
 def newyorker_caption_contest_llama2(args): 
     print ("Loading data")
     nyc_data_five_val = []
-    with jsonlines.open('out/val.jsonl') as reader:
+    with jsonlines.open(f'{args.output_dir}/val.jsonl') as reader:
         for obj in reader:
             nyc_data_five_val.append(obj)
 
     nyc_data_train_two = []
-    with jsonlines.open('out/train.jsonl') as reader:
+    with jsonlines.open(f'{args.output_dir}/train.jsonl') as reader:
         for obj in reader:
             nyc_data_train_two.append(obj)
 
@@ -145,7 +145,23 @@ def newyorker_caption_contest_llama2(args):
 
     for i, val_inst in enumerate(nyc_data_five_val):         
         # ======================> ADD YOUR CODE TO DEFINE A PROMPT WITH TWO TRAIN EXAMPLES/DEMONSTRATIONS/SHOTS <======================
-        prompt = "your prompt"
+        prompt = f"""<s>[INST] <<SYS>> 
+        You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content.
+        Please creatively analyze the descriptions of the cartoon images given below and the corresponding captions and explain the joke in the caption.
+        
+        Each description contains the scene of the image, followed by description of the cartoon image itself, entities in the image and ends with a caption of the image.
+        <</SYS>>
+
+        Cartoon description and caption: {nyc_data_train_two[0]['input']} [/INST]
+        Explanation: {nyc_data_train_two[0]['target']} </s>
+
+        <s>[INST]
+        Cartoon description and caption: {nyc_data_train_two[1]['input']} [/INST]
+        Explanation: {nyc_data_train_two[1]['target']} </s>
+
+        <s>[INST]
+        Cartoon description and caption: {val_inst['input']} [/INST]
+        """
 
         sequences = pipeline(
             prompt,
@@ -157,7 +173,7 @@ def newyorker_caption_contest_llama2(args):
         gen_expl = sequences[0]['generated_text'].split("/INST] ")[-1]
         nyc_data_five_val[i]['generated_llama2']=gen_expl
 
-    filename = 'out/val.jsonl'
+    filename = f'{args.output_dir}/val.jsonl'
     with jsonlines.open(filename, mode='w') as writer:
         for item in nyc_data_five_val:
             writer.write(item)
@@ -172,7 +188,7 @@ if __name__ == '__main__':
     parser.add_argument('--idefics_checkpoint', default="HuggingFaceM4/idefics-9b-instruct", type=str, help="The hf name of an idefics checkpoint")
     parser.add_argument('--llama2_checkpoint', default="meta-llama/Llama-2-7b-chat-hf", type=str, help="The hf name of a llama2 checkpoint")
     args = parser.parse_args()
-
+    random.seed(args.seed)
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
     torch.cuda.manual_seed(args.seed)
