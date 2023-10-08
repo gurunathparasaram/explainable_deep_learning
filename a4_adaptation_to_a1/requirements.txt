@@ -1,0 +1,16 @@
+datasets
+evaluate
+transformers
+scikit-learn
+sentencepiece
+torch --index-url https://download.pytorch.org/whl/cu118
+protobuf
+accelerate
+evaluate
+ipython
+jsonlines
+spacy
+scipy
+sklearn
+PIL
+matplotlib
