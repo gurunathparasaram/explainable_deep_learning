@@ -20,5 +20,5 @@ export HF_DATASETS_CACHE="/scratch/general/vast/u1419540/huggingface_cache"
 
 OUT_DIR=/scratch/general/vast/u1419540/cs6966/assignment4/out/
 mkdir -p ${OUT_DIR}
-#python train.py --output_dir ${OUT_DIR} 
-python test.py
+python train.py --output_dir ${OUT_DIR} 
+#python test.py
