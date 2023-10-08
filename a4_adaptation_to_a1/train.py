@@ -109,7 +109,7 @@ def get_tensor_from_filename(filename):
         text_indices = torch.tensor([TEXT.vocab.stoi[t] for t in concept.text], device=device)
         yield text_indices
         
-def assemble_concept(name, id, concepts_path="data/tcav/text-sensitivity"):
+def assemble_concept(name, id, concepts_path="data/tcav/sentiment-classification"):
     dataset = CustomIterableDataset(get_tensor_from_filename, concepts_path)
     concept_iter = dataset_to_dataloader(dataset, batch_size=1)
     return Concept(id=id, name=name, data_iter=concept_iter)
